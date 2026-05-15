@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Veladores3D — Confirmar Pedido</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F5F1EA;
+  --bg2: #EDE4D8;
+  --surface: rgba(255,255,255,0.7);
+  --surface2: rgba(255,255,255,0.9);
+  --border: rgba(161,134,111,0.18);
+  --border-warm: rgba(161,134,111,0.35);
+  --sand: #D8C3A5;
+  --mocha: #A1866F;
+  --chocolate: #6B5B4D;
+  --ivory: #F9F5EE;
+  --cream: #EDE4D8;
+  --champagne: #C2A78D;
+  --dark: #2A2A2A;
+  --mid: #7A6A5C;
+  --light-text: #A1907E;
+  --gold: #B89A6E;
+  --white: #FDFAF5;
+  --font-display: 'Cormorant Garamond', serif;
+  --font-heading: 'Playfair Display', serif;
+  --font-body: 'DM Sans', sans-serif;
+  --radius: 4px;
+  --transition: 0.45s cubic-bezier(0.25,0.46,0.45,0.94);
+  --success: #2e7d4f;
+  --success-bg: rgba(46,125,79,0.08);
+  --wa-green: #1fbe5c;
+}
+
+[data-theme="dark"] {
+  --bg: #141210; --bg2: #1C1916;
+  --surface: rgba(30,26,22,0.85); --surface2: rgba(38,33,28,0.95);
+  --border: rgba(161,134,111,0.12); --border-warm: rgba(161,134,111,0.22);
+  --sand: #3D3028; --mocha: #C2A78D; --chocolate: #A1866F;
+  --ivory: #1E1B17; --cream: #1C1916; --champagne: #8A7260;
+  --dark: #F0EAE2; --mid: #B09A88; --light-text: #7A6A5C;
+  --gold: #C8A87E; --white: #1A1714;
+}
+[data-theme="dark"] body { background: var(--bg); color: var(--dark); }
+[data-theme="dark"] #navbar { background: rgba(14,12,10,0.92) !important; border-bottom-color: rgba(161,134,111,0.15) !important; }
+[data-theme="dark"] .mobile-menu { background: #0E0C0A !important; }
+[data-theme="dark"] footer { background: #0D0B09 !important; }
+[data-theme="dark"] .cart-panel, [data-theme="dark"] .form-panel, [data-theme="dark"] .summary-box { background: rgba(28,25,22,0.9) !important; border-color: rgba(161,134,111,0.18) !important; }
+[data-theme="dark"] .qty-btn { background: rgba(42,35,28,0.9) !important; border-color: rgba(161,134,111,0.25) !important; }
+[data-theme="dark"] .form-field input, [data-theme="dark"] .form-field select, [data-theme="dark"] .form-field textarea { background: rgba(28,25,22,0.9) !important; color: var(--dark) !important; border-color: rgba(161,134,111,0.25) !important; }
+[data-theme="dark"] .form-field input:focus, [data-theme="dark"] .form-field select:focus, [data-theme="dark"] .form-field textarea:focus { border-color: var(--champagne) !important; background: rgba(35,30,25,0.95) !important; }
+[data-theme="dark"] .notice-box { background: rgba(28,25,22,0.9) !important; border-color: rgba(161,134,111,0.22) !important; }
+[data-theme="dark"] .thumb-item { background: rgba(28,25,22,0.8) !important; border-color: rgba(161,134,111,0.2) !important; }
+[data-theme="dark"] .thumb-item.active { border-color: var(--champagne) !important; }
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  background: var(--bg);
+  color: var(--dark);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  line-height: 1.6;
+  width: 100%;
+  max-width: 100vw;
+}
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; border: none; background: none; font-family: inherit; }
+input, select, textarea { font-family: inherit; }
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--cream); }
+::-webkit-scrollbar-thumb { background: var(--champagne); border-radius: 2px; }
+
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.025'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 9999; opacity: 0.4;
+  mix-blend-mode: multiply;
+}
+
+/* ── UTILITIES ── */
+.container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+.divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(161,134,111,0.2), transparent); }
+
+.section-tag {
+  font-family: var(--font-body); font-size: 0.65rem; letter-spacing: 0.3em;
+  text-transform: uppercase; color: var(--mocha); margin-bottom: 20px;
+  display: flex; align-items: center; gap: 16px; font-weight: 400;
+}
+.section-tag::before { content: ''; display: block; width: 40px; height: 1px; background: var(--champagne); }
+
+/* ── THEME TOGGLE ── */
+.theme-toggle {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--border-warm);
+  background: var(--surface2); font-size: 1rem;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.3s ease; flex-shrink: 0;
+}
+.theme-toggle:hover { background: var(--cream); border-color: var(--champagne); transform: rotate(20deg); }
+
+/* ── NAVBAR ── */
+#navbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  padding: 0 40px; height: 70px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(245,241,234,0.94);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 20px rgba(107,91,77,0.06);
+}
+.nav-logo {
+  font-family: var(--font-display); font-size: 1.25rem; font-weight: 400;
+  color: var(--dark); display: flex; align-items: center; gap: 10px;
+  letter-spacing: 0.04em; transition: opacity 0.3s;
+}
+.nav-logo:hover { opacity: 0.75; }
+.nav-logo-icon { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.nav-logo-icon svg { width: 34px; height: 34px; filter: drop-shadow(0 0 5px rgba(184,154,110,0.4)); }
+.nav-links { display: flex; gap: 40px; list-style: none; }
+.nav-links a { font-family: var(--font-body); font-size: 0.78rem; font-weight: 400; color: var(--mid); transition: color 0.3s; letter-spacing: 0.1em; text-transform: uppercase; }
+.nav-links a:hover { color: var(--dark); }
+.nav-cta { display: flex; gap: 12px; align-items: center; }
+.btn-primary-nav {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 22px; background: var(--dark); color: var(--ivory);
+  border: 1px solid var(--dark); font-family: var(--font-body);
+  font-size: 0.75rem; font-weight: 400; letter-spacing: 0.12em; text-transform: uppercase;
+  transition: all var(--transition);
+}
+.btn-primary-nav:hover { background: var(--chocolate); border-color: var(--chocolate); transform: translateY(-1px); }
+.nav-burger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+.nav-burger span { display: block; width: 22px; height: 1.5px; background: var(--dark); transition: all 0.3s; }
+
+.mobile-menu {
+  display: none; position: fixed; top: 70px; left: 0; right: 0;
+  background: rgba(245,241,234,0.98); backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 28px 24px; z-index: 999;
+  flex-direction: column; gap: 0;
+  animation: slideDown 0.25s ease both;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  font-family: var(--font-body); font-size: 0.85rem; letter-spacing: 0.1em;
+  text-transform: uppercase; padding: 14px 0; border-bottom: 1px solid var(--border);
+  color: var(--mid); transition: color 0.3s, padding-left 0.3s;
+}
+.mobile-menu a:hover { color: var(--dark); padding-left: 6px; }
+.mobile-menu a:last-child { border-bottom: none; }
+.mobile-menu .mobile-wa-btn {
+  margin-top: 20px; background: var(--dark); color: var(--ivory);
+  text-align: center; padding: 14px 20px; font-size: 0.78rem; letter-spacing: 0.12em;
+  border: none; border-bottom: none;
+}
+.mobile-menu .mobile-wa-btn:hover { background: var(--chocolate); padding-left: 0; }
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── PAGE HEADER ── */
+.page-header {
+  padding-top: 70px;
+  background: linear-gradient(160deg, var(--ivory) 0%, var(--bg) 60%, var(--cream) 100%);
+  border-bottom: 1px solid var(--border);
+}
+.page-header-inner { padding: 40px 0 32px; }
+.breadcrumb {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-body); font-size: 0.72rem; font-weight: 400;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--light-text);
+  margin-bottom: 28px; flex-wrap: wrap;
+}
+.breadcrumb a { color: var(--mid); transition: color 0.3s; }
+.breadcrumb a:hover { color: var(--dark); }
+.breadcrumb-sep { color: rgba(161,134,111,0.5); font-size: 0.6rem; }
+.breadcrumb-current { color: var(--dark); }
+
+.checkout-steps { display: flex; align-items: center; margin-bottom: 36px; }
+.step-item-nav { display: flex; align-items: center; gap: 10px; }
+.step-dot {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 1px solid var(--border-warm); background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-body); font-size: 0.68rem; font-weight: 400;
+  color: var(--mid); flex-shrink: 0; transition: all 0.3s;
+}
+.step-dot.active { background: var(--dark); border-color: var(--dark); color: var(--ivory); }
+.step-dot.done { background: rgba(46,125,79,0.15); border-color: rgba(46,125,79,0.4); color: var(--success); }
+.step-dot.done::after { content: '✓'; font-size: 0.65rem; }
+.step-label { font-family: var(--font-body); font-size: 0.72rem; font-weight: 400; color: var(--mid); letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; }
+.step-label.active { color: var(--dark); }
+.step-connector { flex: 1; height: 1px; background: linear-gradient(90deg, var(--border-warm), var(--border)); margin: 0 16px; min-width: 24px; }
+
+.page-title { font-family: var(--font-display); font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 300; color: var(--dark); letter-spacing: 0.01em; line-height: 1.1; }
+.page-title em { font-style: italic; color: var(--mocha); }
+.page-subtitle { font-size: 0.9rem; color: var(--mid); margin-top: 10px; font-weight: 300; line-height: 1.7; }
+
+/* ── LAYOUT ── */
+.cart-section { padding: 48px 0 80px; background: var(--bg); }
+.cart-layout { display: grid; grid-template-columns: 1fr 380px; gap: 28px; align-items: start; }
+
+/* ── PANELS ── */
+.cart-panel, .form-panel { background: var(--white); border: 1px solid var(--border); overflow: hidden; }
+.panel-header { padding: 24px 28px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 14px; }
+.panel-icon { width: 36px; height: 36px; border: 1px solid var(--border-warm); background: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 0.95rem; flex-shrink: 0; }
+.panel-title { font-family: var(--font-display); font-size: 1.15rem; font-weight: 400; color: var(--dark); letter-spacing: 0.02em; }
+.panel-subtitle { font-size: 0.75rem; color: var(--light-text); font-weight: 300; margin-top: 2px; }
+.panel-body { padding: 28px 28px; }
+
+/* ── PRODUCT CARD ── */
+.product-cart-card { display: grid; grid-template-columns: auto 1fr; gap: 24px; align-items: start; }
+.product-image-area { width: 180px; flex-shrink: 0; }
+.main-image-wrap { position: relative; width: 180px; height: 200px; overflow: hidden; border: 1px solid var(--border); background: linear-gradient(145deg, var(--cream), var(--bg2)); }
+.main-image-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease, opacity 0.3s ease; }
+.main-image-wrap:hover img { transform: scale(1.04); }
+.main-image-badge { position: absolute; top: 10px; left: 10px; padding: 3px 10px; font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; background: rgba(161,134,111,0.12); border: 1px solid rgba(161,134,111,0.28); color: var(--chocolate); font-family: var(--font-body); }
+
+.thumbnails { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.thumb-item { width: 44px; height: 44px; border: 1px solid var(--border); overflow: hidden; cursor: pointer; background: var(--cream); transition: all 0.3s; flex-shrink: 0; }
+.thumb-item img { width: 100%; height: 100%; object-fit: cover; }
+.thumb-item.active { border-color: var(--champagne); box-shadow: 0 0 0 1px var(--champagne); }
+.thumb-item:hover { border-color: var(--mocha); }
+
+.product-details { padding-top: 4px; min-width: 0; }
+.product-meta-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+.product-meta-tag { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border: 1px solid var(--border); background: rgba(255,255,255,0.5); font-size: 0.63rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mocha); font-family: var(--font-body); }
+.product-meta-stars { color: var(--gold); font-size: 0.72rem; letter-spacing: 2px; }
+
+.product-name-cart { font-family: var(--font-display); font-size: 1.55rem; font-weight: 400; color: var(--dark); line-height: 1.1; letter-spacing: 0.01em; margin-bottom: 6px; }
+.product-name-cart em { font-style: italic; color: var(--mocha); }
+.product-desc-cart { font-size: 0.875rem; color: var(--mid); line-height: 1.8; font-weight: 300; margin-bottom: 16px; }
+
+.product-attributes { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
+.product-attr { display: flex; align-items: center; gap: 10px; font-size: 0.78rem; color: var(--mid); }
+.product-attr-icon { width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; flex-shrink: 0; }
+.product-attr strong { color: var(--dark); font-weight: 400; }
+
+.stock-indicator { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border: 1px solid rgba(46,125,79,0.25); background: rgba(46,125,79,0.06); margin-bottom: 20px; }
+.stock-dot { width: 6px; height: 6px; border-radius: 50%; background: #2e7d4f; box-shadow: 0 0 0 2px rgba(46,125,79,0.2); animation: stockPulse 2s ease-in-out infinite; flex-shrink: 0; }
+@keyframes stockPulse { 0%, 100% { box-shadow: 0 0 0 2px rgba(46,125,79,0.2); } 50% { box-shadow: 0 0 0 4px rgba(46,125,79,0.1); } }
+.stock-text { font-family: var(--font-body); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: #2e7d4f; font-weight: 400; }
+
+.price-row { display: flex; align-items: center; gap: 16px; margin-bottom: 22px; flex-wrap: wrap; }
+.unit-price { font-family: var(--font-display); font-size: 2rem; font-weight: 400; color: var(--dark); line-height: 1; }
+.unit-price .currency { font-size: 1.1rem; color: var(--mocha); margin-right: 2px; }
+.price-per { font-size: 0.72rem; color: var(--light-text); font-weight: 300; align-self: flex-end; padding-bottom: 4px; }
+
+.qty-section { margin-bottom: 20px; }
+.qty-label { font-family: var(--font-body); font-size: 0.68rem; font-weight: 400; color: var(--mid); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 10px; }
+.qty-controls { display: flex; align-items: center; width: fit-content; border: 1px solid var(--border-warm); overflow: hidden; }
+.qty-btn { width: 44px; height: 44px; background: var(--bg); border: none; cursor: pointer; font-size: 1.1rem; color: var(--chocolate); font-family: var(--font-body); transition: all 0.25s; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.qty-btn:hover { background: var(--dark); color: var(--ivory); }
+.qty-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.qty-btn:disabled:hover { background: var(--bg); color: var(--chocolate); }
+.qty-display { width: 64px; height: 44px; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 1.2rem; font-weight: 400; color: var(--dark); border-left: 1px solid var(--border-warm); border-right: 1px solid var(--border-warm); background: var(--white); user-select: none; }
+
+.subtotal-row { padding: 18px 24px; background: var(--cream); border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+.subtotal-label { font-family: var(--font-body); font-size: 0.72rem; font-weight: 400; color: var(--mid); letter-spacing: 0.15em; text-transform: uppercase; }
+.subtotal-amount { font-family: var(--font-display); font-size: 1.7rem; font-weight: 400; color: var(--dark); letter-spacing: 0.01em; }
+.subtotal-amount .currency { font-size: 1rem; color: var(--mocha); }
+
+/* ── COLOR SELECTOR ── */
+.color-section { margin-bottom: 20px; }
+.color-label { font-family: var(--font-body); font-size: 0.68rem; font-weight: 400; color: var(--mid); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.color-name { color: var(--dark); font-weight: 400; }
+.color-swatches { display: flex; gap: 8px; flex-wrap: wrap; }
+.color-swatch {
+  width: 28px; height: 28px; border-radius: 50%;
+  cursor: pointer; border: 2px solid transparent;
+  transition: all 0.25s; position: relative;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1);
+}
+.color-swatch:hover { transform: scale(1.15); }
+.color-swatch.selected { border-color: var(--dark); box-shadow: 0 0 0 3px var(--bg), 0 0 0 4px var(--dark), inset 0 0 0 1px rgba(0,0,0,0.1); }
+
+/* ── DELIVERY ── */
+.delivery-section { margin-bottom: 28px; }
+.delivery-options { display: flex; flex-direction: column; gap: 10px; }
+.delivery-option { display: flex; align-items: center; gap: 14px; padding: 16px 18px; border: 1px solid var(--border); cursor: pointer; transition: all 0.3s; position: relative; }
+.delivery-option:hover { border-color: var(--champagne); }
+.delivery-option.selected { border-color: var(--dark); background: rgba(42,42,42,0.03); }
+.delivery-radio { width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--border-warm); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.25s; }
+.delivery-option.selected .delivery-radio { border-color: var(--dark); background: var(--dark); }
+.delivery-option.selected .delivery-radio::after { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--ivory); }
+.delivery-icon-wrap { width: 36px; height: 36px; border: 1px solid var(--border); background: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; transition: all 0.3s; }
+.delivery-option.selected .delivery-icon-wrap { border-color: var(--champagne); background: var(--cream); }
+.delivery-info { flex: 1; }
+.delivery-name { font-family: var(--font-body); font-size: 0.85rem; font-weight: 400; color: var(--dark); margin-bottom: 2px; }
+.delivery-desc { font-size: 0.75rem; color: var(--mid); font-weight: 300; line-height: 1.5; }
+.delivery-badge { font-family: var(--font-body); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 8px; background: var(--cream); border: 1px solid var(--border); color: var(--mocha); white-space: nowrap; }
+
+/* ── NOTICE BOX ── */
+.notice-box { background: var(--ivory); border: 1px solid var(--border-warm); padding: 24px 24px; margin-bottom: 24px; position: relative; overflow: hidden; }
+.notice-box::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: linear-gradient(180deg, var(--champagne), var(--mocha)); }
+.notice-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.notice-icon { width: 28px; height: 28px; border: 1px solid var(--border-warm); background: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; flex-shrink: 0; }
+.notice-title { font-family: var(--font-display); font-size: 0.95rem; font-weight: 400; color: var(--dark); letter-spacing: 0.02em; }
+.notice-items { display: flex; flex-direction: column; gap: 10px; }
+.notice-item { display: flex; align-items: flex-start; gap: 10px; font-size: 0.815rem; color: var(--mid); font-weight: 300; line-height: 1.65; }
+.notice-item-icon { width: 16px; height: 16px; border-radius: 50%; border: 1px solid var(--border-warm); display: flex; align-items: center; justify-content: center; font-size: 0.55rem; flex-shrink: 0; margin-top: 2px; background: var(--cream); color: var(--mocha); }
+.notice-item strong { color: var(--dark); font-weight: 400; }
+
+/* ── FORM ── */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 18px; margin-bottom: 20px; }
+.form-grid.single { grid-template-columns: 1fr; }
+.form-field { display: flex; flex-direction: column; gap: 6px; }
+.form-field.full { grid-column: 1 / -1; }
+.form-label { font-family: var(--font-body); font-size: 0.68rem; font-weight: 400; color: var(--mid); letter-spacing: 0.12em; text-transform: uppercase; }
+.form-label .required { color: var(--mocha); margin-left: 3px; font-size: 0.7rem; }
+.form-field input, .form-field select, .form-field textarea {
+  padding: 12px 16px; border: 1px solid var(--border);
+  background: var(--bg); color: var(--dark);
+  font-size: 0.875rem; font-weight: 300; transition: all 0.3s;
+  outline: none; appearance: none; -webkit-appearance: none;
+  border-radius: 0; font-family: var(--font-body);
+  width: 100%;
+}
+.form-field input:focus, .form-field select:focus, .form-field textarea:focus { border-color: var(--champagne); background: var(--white); box-shadow: 0 0 0 3px rgba(161,134,111,0.08); }
+.form-field input::placeholder, .form-field textarea::placeholder { color: var(--light-text); opacity: 0.7; font-weight: 300; }
+.form-field input.error, .form-field select.error { border-color: #c0392b !important; }
+.form-field .field-error { font-size: 0.68rem; color: #c0392b; letter-spacing: 0.05em; display: none; }
+.form-field .field-error.show { display: block; }
+.select-wrap { position: relative; }
+.select-wrap::after { content: '↓'; position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--mocha); font-size: 0.7rem; pointer-events: none; font-family: var(--font-body); }
+.select-wrap select { padding-right: 36px; cursor: pointer; }
+.form-field textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+
+.form-section-title { font-family: var(--font-display); font-size: 1.05rem; font-weight: 400; color: var(--dark); letter-spacing: 0.02em; padding-bottom: 14px; border-bottom: 1px solid var(--border); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+.form-section-icon { font-size: 0.9rem; color: var(--mocha); }
+
+/* ── SUMMARY BOX ── */
+.summary-box { background: var(--white); border: 1px solid var(--border); overflow: hidden; position: sticky; top: 90px; }
+.summary-header { padding: 24px 24px 18px; border-bottom: 1px solid var(--border); }
+.summary-title { font-family: var(--font-display); font-size: 1.1rem; font-weight: 400; color: var(--dark); letter-spacing: 0.02em; }
+.summary-body { padding: 20px 24px; }
+.summary-product-preview { display: flex; gap: 14px; align-items: center; padding-bottom: 16px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+.summary-thumb { width: 52px; height: 56px; object-fit: cover; border: 1px solid var(--border); flex-shrink: 0; background: var(--cream); }
+.summary-product-name { font-family: var(--font-display); font-size: 1rem; font-weight: 400; color: var(--dark); line-height: 1.2; margin-bottom: 3px; }
+.summary-product-qty { font-size: 0.75rem; color: var(--mid); font-weight: 300; }
+.summary-line { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.summary-line-label { font-size: 0.8rem; color: var(--mid); font-weight: 300; }
+.summary-line-value { font-size: 0.875rem; color: var(--dark); font-weight: 400; }
+.summary-line-value.pending { font-size: 0.75rem; color: var(--mocha); font-style: italic; }
+.summary-divider { height: 1px; background: var(--border); margin: 14px 0; }
+.summary-total-row { display: flex; align-items: flex-end; justify-content: space-between; margin-top: 4px; }
+.summary-total-label { font-family: var(--font-body); font-size: 0.72rem; font-weight: 400; color: var(--mid); letter-spacing: 0.15em; text-transform: uppercase; }
+.summary-total-amount { font-family: var(--font-display); font-size: 1.8rem; font-weight: 400; color: var(--dark); }
+.summary-total-amount .currency { font-size: 1rem; color: var(--mocha); }
+.summary-note { margin-top: 14px; padding: 12px 14px; background: var(--cream); border: 1px solid var(--border); font-size: 0.73rem; color: var(--mid); font-weight: 300; line-height: 1.6; display: flex; gap: 8px; align-items: flex-start; }
+.summary-note-icon { font-size: 0.8rem; flex-shrink: 0; margin-top: 1px; }
+.trust-badges { display: flex; flex-direction: column; gap: 8px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border); }
+.trust-badge { display: flex; align-items: center; gap: 10px; font-size: 0.75rem; color: var(--mid); font-weight: 300; }
+.trust-badge-icon { width: 24px; height: 24px; border: 1px solid var(--border); background: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; flex-shrink: 0; }
+
+/* ── CTA ── */
+.cta-wrap { margin-top: 20px; }
+.btn-whatsapp {
+  width: 100%; padding: 18px 24px; background: var(--dark); color: var(--ivory);
+  border: 1px solid var(--dark); font-family: var(--font-body);
+  font-size: 0.82rem; font-weight: 400; letter-spacing: 0.15em; text-transform: uppercase;
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  cursor: pointer; transition: all var(--transition); position: relative; overflow: hidden;
+}
+.btn-whatsapp::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.04) 50%, rgba(255,255,255,0) 100%); transform: translateX(-100%); transition: transform 0.6s ease; }
+.btn-whatsapp:hover::before { transform: translateX(100%); }
+.btn-whatsapp:hover { background: #1fbe5c; border-color: #1fbe5c; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(31,190,92,0.3); }
+.btn-whatsapp:active { transform: translateY(0); }
+.btn-whatsapp svg { width: 18px; height: 18px; fill: currentColor; flex-shrink: 0; }
+.btn-whatsapp-sub { font-size: 0.65rem; color: var(--mid); font-weight: 300; text-align: center; margin-top: 10px; letter-spacing: 0.08em; }
+.btn-whatsapp.loading { pointer-events: none; opacity: 0.75; }
+.btn-whatsapp.loading .btn-text::after { content: ''; display: inline-block; width: 14px; height: 14px; border: 1.5px solid rgba(255,255,255,0.3); border-top-color: rgba(255,255,255,0.9); border-radius: 50%; animation: spin 0.6s linear infinite; margin-left: 8px; vertical-align: middle; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.validation-banner { padding: 14px 20px; background: rgba(192,57,43,0.06); border: 1px solid rgba(192,57,43,0.2); margin-bottom: 20px; display: none; align-items: center; gap: 10px; font-size: 0.8rem; color: #c0392b; font-family: var(--font-body); }
+.validation-banner.show { display: flex; }
+.validation-banner-icon { font-size: 0.9rem; flex-shrink: 0; }
+
+/* ── FOOTER ── */
+footer { background: var(--dark); border-top: 1px solid rgba(161,134,111,0.15); padding: 64px 0 36px; }
+.footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
+.footer-logo { font-family: var(--font-display); font-size: 1.2rem; font-weight: 300; display: flex; align-items: center; gap: 10px; margin-bottom: 18px; color: var(--ivory); letter-spacing: 0.04em; }
+.footer-brand-desc { font-size: 0.82rem; color: rgba(245,241,234,0.5); line-height: 1.8; max-width: 240px; font-weight: 300; }
+.footer-socials { display: flex; gap: 10px; margin-top: 28px; }
+.social-btn { width: 36px; height: 36px; background: transparent; border: 1px solid rgba(161,134,111,0.25); display: flex; align-items: center; justify-content: center; font-size: 0.9rem; transition: all 0.3s; color: rgba(245,241,234,0.5); }
+.social-btn:hover { border-color: var(--champagne); color: var(--champagne); }
+.footer-col h4 { font-family: var(--font-body); font-size: 0.65rem; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; color: var(--champagne); margin-bottom: 22px; }
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.footer-col ul li a { font-size: 0.82rem; color: rgba(245,241,234,0.45); transition: color 0.3s; font-family: var(--font-body); font-weight: 300; }
+.footer-col ul li a:hover { color: var(--ivory); }
+.footer-bottom { border-top: 1px solid rgba(161,134,111,0.12); padding-top: 28px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+.footer-copy { font-size: 0.75rem; color: rgba(245,241,234,0.35); font-family: var(--font-body); font-weight: 300; }
+.footer-bottom-links { display: flex; gap: 22px; }
+.footer-bottom-links a { font-size: 0.75rem; color: rgba(245,241,234,0.35); transition: color 0.3s; font-family: var(--font-body); font-weight: 300; }
+.footer-bottom-links a:hover { color: var(--champagne); }
+
+/* ── WHATSAPP FLOAT ── */
+.whatsapp-float { position: fixed; bottom: 28px; right: 28px; z-index: 900; width: 56px; height: 56px; border-radius: 50%; background: #1fbe5c; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(31,190,92,0.35); transition: transform 0.3s ease, box-shadow 0.3s ease; animation: wa-ping 3.5s ease-in-out infinite; }
+.whatsapp-float:hover { transform: scale(1.1); box-shadow: 0 8px 28px rgba(31,190,92,0.5); animation: none; }
+.whatsapp-float svg { width: 28px; height: 28px; fill: #ffffff; }
+@keyframes wa-ping { 0%, 100% { box-shadow: 0 4px 16px rgba(31,190,92,0.35), 0 0 0 0 rgba(31,190,92,0.25); } 60% { box-shadow: 0 4px 16px rgba(31,190,92,0.35), 0 0 0 14px rgba(31,190,92,0); } }
+
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+.cart-panel { animation: fadeInUp 0.7s ease 0.1s both; }
+.form-panel { animation: fadeInUp 0.7s ease 0.2s both; }
+.summary-box { animation: fadeInUp 0.7s ease 0.15s both; }
+
+/* ============================================================
+   RESPONSIVE — MOBILE FIRST FIXES
+   ============================================================ */
+@media (max-width: 1100px) {
+  .cart-layout { grid-template-columns: 1fr; }
+  .summary-box { position: static; }
+  .nav-links { display: none; }
+  .nav-btn-desktop { display: none; }
+  .nav-burger { display: flex; }
+  #navbar { padding: 0 16px; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+}
+
+@media (max-width: 768px) {
+  .container { padding: 0 16px; }
+  .product-cart-card { grid-template-columns: 1fr; }
+  .product-image-area { width: 100%; }
+  .main-image-wrap { width: 100%; height: 240px; }
+  .thumbnails { justify-content: flex-start; }
+  .form-grid { grid-template-columns: 1fr; }
+  .checkout-steps { gap: 0; }
+  .step-label { display: none; }
+  .step-connector { min-width: 20px; margin: 0 8px; }
+  .panel-body { padding: 20px 16px; }
+  .panel-header { padding: 18px 16px; }
+  .page-header-inner { padding: 24px 0 20px; }
+  .subtotal-row { padding: 14px 16px; }
+  .notice-box { padding: 16px 16px; }
+  .product-desc-cart { font-size: 0.84rem; }
+  .cart-section { padding: 32px 0 60px; }
+}
+
+@media (max-width: 480px) {
+  .page-title { font-size: 1.6rem; }
+  .footer-grid { grid-template-columns: 1fr; gap: 28px; }
+  .footer-bottom { flex-direction: column; text-align: center; }
+  .whatsapp-float { bottom: 18px; right: 16px; width: 50px; height: 50px; }
+  .whatsapp-float svg { width: 24px; height: 24px; }
+  .summary-body { padding: 16px; }
+  .summary-header { padding: 18px 16px; }
+  .breadcrumb { font-size: 0.65rem; gap: 6px; }
+  .product-name-cart { font-size: 1.35rem; }
+  .unit-price { font-size: 1.7rem; }
+  .subtotal-amount { font-size: 1.5rem; }
+  .summary-total-amount { font-size: 1.55rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">
+      <svg viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="bulbGlow" cx="50%" cy="45%" r="55%">
+            <stop offset="0%" stop-color="#C8A87E" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#8A6A4A" stop-opacity="0.6"/>
+          </radialGradient>
+          <filter id="bulbShadow">
+            <feGaussianBlur stdDeviation="1.2" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <ellipse cx="17" cy="15" rx="10" ry="10" fill="url(#bulbGlow)" opacity="0.15"/>
+        <path d="M12 14.5C12 11.46 14.24 9 17 9C19.76 9 22 11.46 22 14.5C22 16.38 21.05 18.04 19.6 19.1L19.6 21.5H14.4L14.4 19.1C12.95 18.04 12 16.38 12 14.5Z"
+              fill="url(#bulbGlow)" stroke="rgba(184,154,110,0.6)" stroke-width="0.8" filter="url(#bulbShadow)"/>
+        <ellipse cx="17" cy="14" rx="3.5" ry="3.5" fill="rgba(255,230,160,0.7)" filter="url(#bulbShadow)"/>
+        <rect x="14.5" y="21.5" width="5" height="1.5" rx="0.5" fill="rgba(184,154,110,0.7)"/>
+        <rect x="14.9" y="23.1" width="4.2" height="1.5" rx="0.5" fill="rgba(161,134,111,0.6)"/>
+        <line x1="17" y1="6" x2="17" y2="8.5" stroke="rgba(184,154,110,0.6)" stroke-width="1" stroke-linecap="round"/>
+      </svg>
+    </div>
+    Veladores3D
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="index.html">Productos</a></li>
+    <li><a href="index.html#proceso">Proceso</a></li>
+    <li><a href="index.html#galeria">Galería</a></li>
+    <li><a href="index.html#faq">FAQ</a></li>
+  </ul>
+
+  <div class="nav-cta">
+    <button id="themeToggle" class="theme-toggle" aria-label="Cambiar tema">🌙</button>
+    <a href="https://wa.me/5491100000000" class="btn-primary-nav nav-btn-desktop">Consultar</a>
+    <div class="nav-burger" id="burgerBtn" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html#productos">Productos</a>
+  <a href="index.html#proceso">Proceso</a>
+  <a href="index.html#galeria">Galería</a>
+  <a href="index.html#testimonios">Testimonios</a>
+  <a href="index.html#faq">FAQ</a>
+  <a href="https://wa.me/5491100000000?text=Hola! Me interesa un velador 3D" class="mobile-wa-btn">Consultar por WhatsApp →</a>
+</div>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="container">
+    <div class="page-header-inner">
+      <div class="breadcrumb">
+        <a href="index.html">Inicio</a>
+        <span class="breadcrumb-sep">›</span>
+        <a href="index.html#productos">Productos</a>
+        <span class="breadcrumb-sep">›</span>
+        <span class="breadcrumb-current" id="bcProduct">Velador</span>
+        <span class="breadcrumb-sep">›</span>
+        <span class="breadcrumb-current">Confirmar Pedido</span>
+      </div>
+
+      <div class="checkout-steps">
+        <div class="step-item-nav">
+          <div class="step-dot done"></div>
+          <span class="step-label">Selección</span>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step-item-nav">
+          <div class="step-dot active"></div>
+          <span class="step-label active">Tu Pedido</span>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step-item-nav">
+          <div class="step-dot">3</div>
+          <span class="step-label">WhatsApp</span>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step-item-nav">
+          <div class="step-dot">4</div>
+          <span class="step-label">Pago</span>
+        </div>
+      </div>
+
+      <h1 class="page-title">Confirmar <em>Pedido</em></h1>
+      <p class="page-subtitle">Revisá tu selección, completá tus datos y finalizá tu pedido por WhatsApp en segundos.</p>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- CART SECTION -->
+<section class="cart-section">
+  <div class="container">
+    <div class="cart-layout">
+
+      <!-- LEFT COLUMN -->
+      <div style="display:flex;flex-direction:column;gap:20px;">
+
+        <!-- PRODUCT CARD -->
+        <div class="cart-panel">
+          <div class="panel-header">
+            <div class="panel-icon">🛒</div>
+            <div>
+              <div class="panel-title">Tu Producto</div>
+              <div class="panel-subtitle">Revisá los detalles antes de continuar</div>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="product-cart-card">
+
+              <!-- Image area -->
+              <div class="product-image-area">
+                <div class="main-image-wrap" id="mainImageWrap">
+                  <img id="mainProductImg" src="V naranja 1.webp" alt="Velador" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(145deg,#EDE4D8,#D8C3A5)'">
+                  <div class="main-image-badge" id="productBadge">Popular</div>
+                </div>
+                <div class="thumbnails" id="thumbnailsRow">
+                  <div class="thumb-item active" data-idx="0">
+                    <img id="thumb0" src="V naranja 1.webp" alt="Vista 1" onerror="this.parentElement.style.background='linear-gradient(145deg,#EDE4D8,#D8C3A5)'">
+                  </div>
+                  <div class="thumb-item" data-idx="1">
+                    <img id="thumb1" src="V naranja 2.webp" alt="Vista encendida" onerror="this.parentElement.style.background='linear-gradient(145deg,#D8C3A5,#C2A78D)'">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Details -->
+              <div class="product-details">
+                <div class="product-meta-row">
+                  <div class="product-meta-tag">
+                    <span style="width:5px;height:5px;border-radius:50%;background:var(--gold);opacity:0.8;display:inline-block;"></span>
+                    Veladores3D
+                  </div>
+                  <div class="product-meta-stars">★★★★★</div>
+                </div>
+
+                <div class="product-name-cart" id="cartProductName">Velador <em>Doble</em></div>
+                <p class="product-desc-cart" id="cartProductDesc">Forma orgánica con textura de ondas verticales. Luz cálida que crea un ambiente íntimo y envolvente.</p>
+
+                <div class="product-attributes">
+                  <div class="product-attr">
+                    <div class="product-attr-icon">🎨</div>
+                    <span><strong>Material:</strong> Filamento PLA+ premium — resistente y duradero</span>
+                  </div>
+                  <div class="product-attr">
+                    <div class="product-attr-icon">💡</div>
+                    <span><strong>Iluminación:</strong> Tira LED cálida de bajo consumo incluida</span>
+                  </div>
+                  <div class="product-attr">
+                    <div class="product-attr-icon">📦</div>
+                    <span><strong>Envío:</strong> A confirmar según provincia</span>
+                  </div>
+                  <div class="product-attr">
+                    <div class="product-attr-icon">🛡️</div>
+                    <span><strong>Garantía:</strong> 6 meses desde la recepción</span>
+                  </div>
+                </div>
+
+                <!-- COLOR SELECTOR -->
+                <div class="color-section">
+                  <div class="color-label">
+                    Color: <span class="color-name" id="selectedColorName">Naranja</span>
+                  </div>
+                  <div class="color-swatches" id="colorSwatches">
+                    <!-- generado por JS -->
+                  </div>
+                </div>
+
+                <!-- Stock -->
+                <div class="stock-indicator">
+                  <div class="stock-dot"></div>
+                  <span class="stock-text">Stock disponible — entrega en 5–7 días hábiles</span>
+                </div>
+
+                <!-- Price -->
+                <div class="price-row">
+                  <div class="unit-price">
+                    <span class="currency">$</span><span id="unitPriceDisplay">18.500</span>
+                  </div>
+                  <div class="price-per">por unidad</div>
+                </div>
+
+                <!-- Quantity -->
+                <div class="qty-section">
+                  <div class="qty-label">Cantidad</div>
+                  <div class="qty-controls">
+                    <button class="qty-btn" id="qtyMinus" aria-label="Restar">−</button>
+                    <div class="qty-display" id="qtyDisplay" aria-live="polite">1</div>
+                    <button class="qty-btn" id="qtyPlus" aria-label="Sumar">+</button>
+                  </div>
+                </div>
+
+                <!-- Subtotal -->
+                <div class="subtotal-row">
+                  <div class="subtotal-label">Subtotal</div>
+                  <div class="subtotal-amount">
+                    <span class="currency">$</span><span id="subtotalDisplay">18.500</span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- NOTICE -->
+        <div class="notice-box">
+          <div class="notice-header">
+            <div class="notice-icon">ℹ️</div>
+            <div class="notice-title">Información sobre el proceso de compra</div>
+          </div>
+          <div class="notice-items">
+            <div class="notice-item">
+              <div class="notice-item-icon">1</div>
+              <span><strong>Costo de envío:</strong> El valor exacto del envío se confirmará por WhatsApp según tu provincia y método elegido.</span>
+            </div>
+            <div class="notice-item">
+              <div class="notice-item-icon">2</div>
+              <span><strong>Método de pago:</strong> Aceptamos <strong>únicamente transferencia por Mercado Pago</strong>. El alias te será enviado por WhatsApp al confirmar el pedido.</span>
+            </div>
+            <div class="notice-item">
+              <div class="notice-item-icon">3</div>
+              <span><strong>Comprobante:</strong> Enviá la captura del pago por WhatsApp para dar inicio a la producción.</span>
+            </div>
+            <div class="notice-item">
+              <div class="notice-item-icon">4</div>
+              <span><strong>Producción y envío:</strong> 5 a 7 días hábiles desde la confirmación del pago. Te avisamos en cada etapa.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CUSTOMER FORM -->
+        <div class="form-panel">
+          <div class="panel-header">
+            <div class="panel-icon">👤</div>
+            <div>
+              <div class="panel-title">Tus Datos</div>
+              <div class="panel-subtitle">Todos los campos son necesarios para procesar tu pedido</div>
+            </div>
+          </div>
+          <div class="panel-body">
+
+            <div class="validation-banner" id="validationBanner">
+              <span class="validation-banner-icon">⚠️</span>
+              <span id="validationMsg">Por favor, completá todos los campos obligatorios antes de continuar.</span>
+            </div>
+
+            <div class="form-section-title">
+              <span class="form-section-icon">🧑</span>
+              Datos personales
+            </div>
+            <div class="form-grid">
+              <div class="form-field">
+                <label class="form-label" for="fNombre">Nombre <span class="required">*</span></label>
+                <input type="text" id="fNombre" placeholder="Ej: Valentina" autocomplete="given-name">
+                <span class="field-error" id="errNombre">Ingresá tu nombre</span>
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="fApellido">Apellido <span class="required">*</span></label>
+                <input type="text" id="fApellido" placeholder="Ej: Martínez" autocomplete="family-name">
+                <span class="field-error" id="errApellido">Ingresá tu apellido</span>
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="fDni">DNI <span class="required">*</span></label>
+                <input type="text" id="fDni" placeholder="Ej: 38.456.789" inputmode="numeric">
+                <span class="field-error" id="errDni">Ingresá tu DNI</span>
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="fTelefono">WhatsApp <span class="required">*</span></label>
+                <input type="tel" id="fTelefono" placeholder="Ej: +54 11 1234-5678" autocomplete="tel" inputmode="tel">
+                <span class="field-error" id="errTelefono">Ingresá tu teléfono</span>
+              </div>
+              <div class="form-field full">
+                <label class="form-label" for="fEmail">Email <span class="required">*</span></label>
+                <input type="email" id="fEmail" placeholder="Ej: valentina@email.com" autocomplete="email" inputmode="email">
+                <span class="field-error" id="errEmail">Ingresá un email válido</span>
+              </div>
+            </div>
+
+            <div class="form-section-title" style="margin-top:8px;">
+              <span class="form-section-icon">📦</span>
+              Dirección de envío
+            </div>
+            <div class="form-grid">
+              <div class="form-field full">
+                <label class="form-label" for="fDireccion">Dirección (calle y número) <span class="required">*</span></label>
+                <input type="text" id="fDireccion" placeholder="Ej: Av. Corrientes 1234, Piso 3, Depto B" autocomplete="street-address">
+                <span class="field-error" id="errDireccion">Ingresá tu dirección</span>
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="fCiudad">Ciudad <span class="required">*</span></label>
+                <input type="text" id="fCiudad" placeholder="Ej: Buenos Aires" autocomplete="address-level2">
+                <span class="field-error" id="errCiudad">Ingresá tu ciudad</span>
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="fProvincia">Provincia <span class="required">*</span></label>
+                <div class="select-wrap">
+                  <select id="fProvincia">
+                    <option value="">— Seleccioná —</option>
+                    <option>Buenos Aires (CABA)</option>
+                    <option>Buenos Aires (GBA Norte)</option>
+                    <option>Buenos Aires (GBA Sur)</option>
+                    <option>Buenos Aires (GBA Oeste)</option>
+                    <option>Buenos Aires (Interior)</option>
+                    <option>Catamarca</option><option>Chaco</option><option>Chubut</option>
+                    <option>Córdoba</option><option>Corrientes</option><option>Entre Ríos</option>
+                    <option>Formosa</option><option>Jujuy</option><option>La Pampa</option>
+                    <option>La Rioja</option><option>Mendoza</option><option>Misiones</option>
+                    <option>Neuquén</option><option>Río Negro</option><option>Salta</option>
+                    <option>San Juan</option><option>San Luis</option><option>Santa Cruz</option>
+                    <option>Santa Fe</option><option>Santiago del Estero</option>
+                    <option>Tierra del Fuego</option><option>Tucumán</option>
+                  </select>
+                </div>
+                <span class="field-error" id="errProvincia">Seleccioná tu provincia</span>
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="fCp">Código postal <span class="required">*</span></label>
+                <input type="text" id="fCp" placeholder="Ej: 1414" inputmode="numeric">
+                <span class="field-error" id="errCp">Ingresá tu código postal</span>
+              </div>
+              <div class="form-field full">
+                <label class="form-label" for="fRefs">Referencias <span style="color:var(--light-text);font-size:0.62rem;">(opcional)</span></label>
+                <input type="text" id="fRefs" placeholder="Ej: Timbre 3B, portero sin código">
+              </div>
+            </div>
+
+            <!-- DELIVERY — solo Correo Argentino para Andreani -->
+            <div class="form-section-title" style="margin-top:8px;">
+              <span class="form-section-icon">🚚</span>
+              Método de entrega
+            </div>
+            <div class="delivery-section">
+              <div class="delivery-options" id="deliveryOptions">
+
+                <div class="delivery-option selected" data-value="Correo Argentino">
+                  <div class="delivery-radio"></div>
+                  <div class="delivery-icon-wrap">📬</div>
+                  <div class="delivery-info">
+                    <div class="delivery-name">Correo Argentino</div>
+                    <div class="delivery-desc">Envío a todo el país · 3 a 7 días hábiles después del despacho</div>
+                  </div>
+                  <div class="delivery-badge">A confirmar</div>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="form-section-title" style="margin-top:8px;">
+              <span class="form-section-icon">📝</span>
+              Notas del pedido
+            </div>
+            <div class="form-grid single">
+              <div class="form-field">
+                <label class="form-label" for="fNotas">Comentarios <span style="color:var(--light-text);font-size:0.62rem;">(opcional)</span></label>
+                <textarea id="fNotas" rows="3" placeholder="Ej: Es un regalo, ¿podrían incluir un mensaje?"></textarea>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div><!-- /left -->
+
+      <!-- RIGHT COLUMN -->
+      <div>
+        <div class="summary-box">
+          <div class="summary-header">
+            <div class="summary-title">Resumen del pedido</div>
+          </div>
+          <div class="summary-body">
+
+            <div class="summary-product-preview">
+              <img class="summary-thumb" id="summaryThumb" src="V naranja 1.webp" alt="Velador" onerror="this.style.display='none'">
+              <div>
+                <div class="summary-product-name" id="summaryProductName">Velador Doble</div>
+                <div class="summary-product-qty">Color: <span id="summaryColor">Naranja</span></div>
+                <div class="summary-product-qty" style="margin-top:2px;">Cantidad: <span id="summaryQty">1</span> unidad</div>
+              </div>
+            </div>
+
+            <div class="summary-line">
+              <span class="summary-line-label">Precio unitario</span>
+              <span class="summary-line-value">$<span id="summaryUnitPrice">18.500</span></span>
+            </div>
+            <div class="summary-line">
+              <span class="summary-line-label">Cantidad</span>
+              <span class="summary-line-value">× <span id="summaryQtyLine">1</span></span>
+            </div>
+            <div class="summary-line">
+              <span class="summary-line-label">Costo de envío</span>
+              <span class="summary-line-value pending">A confirmar por WhatsApp</span>
+            </div>
+            <div class="summary-divider"></div>
+
+            <div class="summary-total-row">
+              <div>
+                <div class="summary-total-label">Total del pedido</div>
+                <div style="font-size:0.68rem;color:var(--light-text);margin-top:2px;font-weight:300;">Sin costo de envío</div>
+              </div>
+              <div class="summary-total-amount">
+                <span class="currency">$</span><span id="summaryTotal">18.500</span>
+              </div>
+            </div>
+
+            <div class="summary-note">
+              <span class="summary-note-icon">💳</span>
+              <span>Pago <strong>exclusivamente</strong> por transferencia Mercado Pago. El alias se envía por WhatsApp.</span>
+            </div>
+
+            <div class="trust-badges">
+              <div class="trust-badge"><div class="trust-badge-icon">🔒</div><span>Tus datos están seguros</span></div>
+              <div class="trust-badge"><div class="trust-badge-icon">✅</div><span>+500 pedidos entregados con 5 estrellas</span></div>
+              <div class="trust-badge"><div class="trust-badge-icon">🛡️</div><span>Garantía de 6 meses</span></div>
+              <div class="trust-badge"><div class="trust-badge-icon">📦</div><span>Embalaje premium para máxima protección</span></div>
+            </div>
+
+            <div class="cta-wrap">
+              <button class="btn-whatsapp" id="btnFinalizar" type="button">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                </svg>
+                <span class="btn-text">Finalizar por WhatsApp</span>
+              </button>
+              <div class="btn-whatsapp-sub">Serás redirigido a WhatsApp con todos tus datos</div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <div class="nav-logo-icon" style="filter:brightness(1.3);">
+            <svg viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="bulbGlow2" cx="50%" cy="45%" r="55%">
+                  <stop offset="0%" stop-color="#F0C87A" stop-opacity="0.9"/>
+                  <stop offset="100%" stop-color="#C8A87E" stop-opacity="0.7"/>
+                </radialGradient>
+              </defs>
+              <path d="M12 14.5C12 11.46 14.24 9 17 9C19.76 9 22 11.46 22 14.5C22 16.38 21.05 18.04 19.6 19.1L19.6 21.5H14.4L14.4 19.1C12.95 18.04 12 16.38 12 14.5Z"
+                    fill="url(#bulbGlow2)" stroke="rgba(240,200,120,0.5)" stroke-width="0.8"/>
+              <ellipse cx="17" cy="14" rx="3.5" ry="3.5" fill="rgba(255,240,180,0.8)"/>
+              <rect x="14.5" y="21.5" width="5" height="1.5" rx="0.5" fill="rgba(240,200,120,0.7)"/>
+              <rect x="14.9" y="23.1" width="4.2" height="1.5" rx="0.5" fill="rgba(200,168,126,0.6)"/>
+            </svg>
+          </div>
+          Veladores3D
+        </div>
+        <p class="footer-brand-desc">Veladores únicos impresos en 3D. Diseño, artesanía y personalización para transformar tu espacio.</p>
+        <div class="footer-socials">
+          <a href="https://wa.me/5491100000000" class="social-btn" title="WhatsApp">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          </a>
+          <a href="https://instagram.com" class="social-btn" title="Instagram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Productos</h4>
+        <ul>
+          <li><a href="pedido.html?producto=Doble">Velador Doble</a></li>
+          <li><a href="pedido.html?producto=Nordico">Velador Nórdico</a></li>
+          <li><a href="pedido.html?producto=Gota">Velador Gota</a></li>
+          <li><a href="pedido.html?producto=Alga">Velador Alga</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Empresa</h4>
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="index.html#proceso">Proceso</a></li>
+          <li><a href="index.html#galeria">Galería</a></li>
+          <li><a href="index.html#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contacto</h4>
+        <ul>
+          <li><a href="https://wa.me/5491100000000">WhatsApp</a></li>
+          <li><a href="https://instagram.com">Instagram</a></li>
+          <li><a href="#">Email</a></li>
+          <li><a href="#">Envíos a todo el país</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2025 Veladores3D · Hecho con cuidado en Argentina</div>
+      <div class="footer-bottom-links">
+        <a href="#">Privacidad</a>
+        <a href="#">Términos</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<a href="https://wa.me/5491100000000?text=Hola! Me interesa un velador 3D" class="whatsapp-float" title="Consultar por WhatsApp" aria-label="Consultar">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+</a>
+
+<script>
+/* ====================================================
+   COLORES COMPARTIDOS ENTRE MODELOS
+   Nombre, color CSS, prefijo de imagen
+   Las imágenes deben seguir el patrón:
+     {modelo}_{colorKey} 1.webp  y  {modelo}_{colorKey} 2.webp
+   Ejemplo: Doble_naranja 1.webp, Nordico_rosa 1.webp
+   Si no existe la imagen específica, cae en el fallback del modelo
+   ==================================================== */
+const COLORS = [
+  { key: 'rosa',     name: 'Rosa',     css: '#E8A0B4' },
+  { key: 'rojo',     name: 'Rojo',     css: '#CC2222' },
+  { key: 'nude',     name: 'Nude',     css: '#D4A882' },
+  { key: 'naranja',  name: 'Naranja',  css: '#C8601A' },
+  { key: 'amarillo', name: 'Amarillo', css: '#D4B800' },
+  { key: 'blanco',   name: 'Blanco',   css: '#F5F1EA', border: true },
+];
+
+/* ====================================================
+   PRODUCTOS
+   imgOff/imgOn = número del archivo según modelo
+   Doble=1,2 | Nordico=3,4 | Gota=5,6 | Alga=7,8
+   Patrón completo: "V {color} {N}.webp"
+   ==================================================== */
+// Sufijos de imagen por modelo: [apagado, encendido]
+// Patrón: "V {color} {sufijo}.webp"
+// Doble=1,2 | Nordico=3,4 | Gota=5,6 | Alga=7,8
+const products = {
+  Doble:   { name: 'Velador Doble',    nameItalic: 'Doble',    price: 18500, badge: 'Popular',       imgOff: 1, imgOn: 2, desc: 'Forma orgánica con textura de ondas verticales. Luz cálida que crea un ambiente íntimo y envolvente.' },
+  Nordico: { name: 'Velador Nórdico',  nameItalic: 'Nórdico',  price: 19000, badge: 'Nuevo',         imgOff: 3, imgOn: 4, desc: 'Diseño nórdico minimalista. Líneas limpias y luz difusa que aporta calidez escandinava a tu espacio.' },
+  Gota:    { name: 'Velador Gota',     nameItalic: 'Gota',     price: 19000, badge: '🔥 Top ventas', imgOff: 5, imgOn: 6, desc: 'Silueta gota que se transforma al encenderse. Perfecto como pieza de acento en cualquier ambiente.' },
+  Alga:    { name: 'Velador Alga',     nameItalic: 'Alga',     price: 19000, badge: '✦ Especial',    imgOff: 7, imgOn: 8, desc: 'Textura orgánica inspirada en algas marinas. Al encenderse proyecta sombras únicas en las paredes.' },
+};
+
+/* ====================================================
+   CART SYSTEM — comparte localStorage 'lp_cart' con Doble.html
+   ==================================================== */
+const CartSystem = {
+  PRODUCT_IDS: {
+    Doble:   'velador-doble',
+    Nordico: 'velador-nordico',
+    Gota:    'velador-gota',
+    Alga:    'velador-alga',
+  },
+  get items() { return JSON.parse(localStorage.getItem('lp_cart') || '[]'); },
+  _save(items) { localStorage.setItem('lp_cart', JSON.stringify(items)); },
+  // Setea (reemplaza) el item exacto por id+color. qty<=0 lo elimina.
+  setItem(item) {
+    const items = this.items;
+    const idx = items.findIndex(i => i.id === item.id && i.color === item.color);
+    if (item.qty <= 0) {
+      if (idx > -1) items.splice(idx, 1);
+    } else {
+      if (idx > -1) { items[idx] = { ...items[idx], ...item }; }
+      else { items.push({ ...item }); }
+    }
+    this._save(items);
+  },
+  clear() { this._save([]); },
+  getProductItem(productKey) {
+    const id = this.PRODUCT_IDS[productKey] || ('velador-' + productKey.toLowerCase());
+    return this.items.find(i => i.id === id) || null;
+  },
+};
+
+/* ====================================================
+   ESTADO
+   ==================================================== */
+function getParam(k){ return new URLSearchParams(window.location.search).get(k); }
+let currentProductKey = getParam('producto') || 'Doble';
+if (!products[currentProductKey]) currentProductKey = 'Doble';
+let currentProduct = products[currentProductKey];
+let selectedDelivery = 'Correo Argentino';
+let activeThumbIdx = 0;
+
+/* ── Inicializar cantidad y color desde el carrito ── */
+let quantity = 1;
+let selectedColorKey = 'naranja';
+let selectedColorName = 'Naranja';
+(function initFromCart() {
+  try {
+    const match = CartSystem.getProductItem(currentProductKey);
+    if (match) {
+      if (match.qty >= 1) quantity = match.qty;
+      if (match.color) {
+        const colorMatch = COLORS.find(c => c.name.toLowerCase() === match.color.toLowerCase());
+        if (colorMatch) {
+          selectedColorKey  = colorMatch.key;
+          selectedColorName = colorMatch.name;
+        }
+      }
+    }
+  } catch(e) {}
+})();
+
+/* ====================================================
+   IMAGEN POR COLOR Y MODELO
+   Patrón: "V {color} {N}.webp"
+   Doble  → apagado=1, encendido=2
+   Nordico→ apagado=3, encendido=4
+   Gota   → apagado=5, encendido=6
+   Alga   → apagado=7, encendido=8
+   ==================================================== */
+function colorImg(idx) {
+  // idx: 0 = apagado, 1 = encendido
+  // Patrón: "V {color} {N}.webp"
+  // Doble=1,2 | Nordico=3,4 | Gota=5,6 | Alga=7,8
+  const n = idx === 0 ? currentProduct.imgOff : currentProduct.imgOn;
+  return `V ${selectedColorKey} ${n}.webp`;
+}
+function fallbackImg(idx) {
+  // Fallback: naranja del mismo modelo
+  const n = idx === 0 ? currentProduct.imgOff : currentProduct.imgOn;
+  return `V naranja ${n}.webp`;
+}
+
+/* ====================================================
+   UTILS
+   ==================================================== */
+function fmt(n){ return n.toLocaleString('es-AR').replace(/,/g,'.'); }
+
+/* ====================================================
+   RENDERIZAR SWATCHES DE COLOR
+   ==================================================== */
+function renderSwatches() {
+  const container = document.getElementById('colorSwatches');
+  container.innerHTML = '';
+  COLORS.forEach(c => {
+    const div = document.createElement('div');
+    div.className = 'color-swatch' + (c.key === selectedColorKey ? ' selected' : '');
+    div.style.background = c.css;
+    if (c.border) div.style.border = '2px solid var(--border-warm)';
+    div.title = c.name;
+    div.dataset.colorKey = c.key;
+    div.dataset.colorName = c.name;
+    div.addEventListener('click', () => selectColor(c.key, c.name));
+    container.appendChild(div);
+  });
+}
+
+/* ====================================================
+   SELECCIONAR COLOR → cambia imágenes
+   ==================================================== */
+function selectColor(key, name) {
+  selectedColorKey = key;
+  selectedColorName = name;
+
+  // Actualizar swatches
+  document.querySelectorAll('.color-swatch').forEach(s => {
+    s.classList.toggle('selected', s.dataset.colorKey === key);
+  });
+
+  document.getElementById('selectedColorName').textContent = name;
+  document.getElementById('summaryColor').textContent = name;
+  // Sincronizar color en carrito
+  const cartId = CartSystem.PRODUCT_IDS[currentProductKey] || ('velador-' + currentProductKey.toLowerCase());
+  CartSystem.setItem({ id: cartId, name: currentProduct.name, color: selectedColorName, qty: quantity, price: currentProduct.price });
+
+  // Actualizar thumbnails src
+  const thumb0 = document.getElementById('thumb0');
+  const thumb1 = document.getElementById('thumb1');
+  const newSrc0 = colorImg(0);
+  const newSrc1 = colorImg(1);
+
+  // Preload y fallback
+  function setThumbWithFallback(imgEl, primary, fallback) {
+    const tester = new Image();
+    tester.onload  = () => { imgEl.src = primary; };
+    tester.onerror = () => { imgEl.src = fallback; };
+    tester.src = primary;
+  }
+
+  setThumbWithFallback(thumb0, newSrc0, fallbackImg(0));
+  setThumbWithFallback(thumb1, newSrc1, fallbackImg(1));
+
+  // Cambiar imagen principal al color actual (misma vista que estaba activa)
+  switchMainImage(activeThumbIdx, true);
+}
+
+/* ====================================================
+   CAMBIAR IMAGEN PRINCIPAL
+   ==================================================== */
+function switchMainImage(idx, forceColor) {
+  activeThumbIdx = idx;
+  const mainImg = document.getElementById('mainProductImg');
+  const primary = colorImg(idx);
+  const fallback = fallbackImg(idx);
+
+  // Actualizar thumbnails activos
+  document.querySelectorAll('.thumb-item').forEach((t, i) => {
+    t.classList.toggle('active', i === idx);
+  });
+
+  // Fade y carga con fallback
+  mainImg.style.opacity = '0';
+  const tester = new Image();
+  tester.onload = () => {
+    mainImg.src = primary;
+    mainImg.style.opacity = '1';
+    // También actualizar summary thumb con la img 0
+    if (idx === 0) updateSummaryThumb(primary);
+  };
+  tester.onerror = () => {
+    mainImg.src = fallback;
+    mainImg.style.opacity = '1';
+    if (idx === 0) updateSummaryThumb(fallback);
+  };
+  tester.src = primary;
+}
+
+function updateSummaryThumb(src) {
+  const st = document.getElementById('summaryThumb');
+  if (st) st.src = src;
+}
+
+/* ====================================================
+   CARGAR PRODUCTO
+   ==================================================== */
+function loadProductUI() {
+  const p = currentProduct;
+  document.getElementById('bcProduct').textContent = p.name;
+  document.getElementById('cartProductName').innerHTML = `Velador <em>${p.nameItalic}</em>`;
+  document.getElementById('cartProductDesc').textContent = p.desc;
+  document.getElementById('productBadge').textContent = p.badge;
+  document.getElementById('summaryProductName').textContent = p.name;
+
+  // Imágenes iniciales
+  const img = document.getElementById('mainProductImg');
+  img.src = colorImg(0);
+  img.onerror = () => { img.src = p.img1; };
+  document.getElementById('summaryThumb').src = colorImg(0);
+
+  document.getElementById('thumb0').src = colorImg(0);
+  document.getElementById('thumb1').src = colorImg(1);
+
+  renderSwatches();
+  updatePricing();
+}
+
+/* ====================================================
+   THUMBNAILS CLICK
+   ==================================================== */
+document.querySelectorAll('.thumb-item').forEach((thumb, i) => {
+  thumb.addEventListener('click', () => switchMainImage(i, false));
+});
+
+/* ====================================================
+   PRICING
+   ==================================================== */
+function updatePricing() {
+  const price = currentProduct.price;
+  const subtotal = price * quantity;
+  document.getElementById('unitPriceDisplay').textContent = fmt(price);
+  document.getElementById('subtotalDisplay').textContent  = fmt(subtotal);
+  document.getElementById('summaryUnitPrice').textContent = fmt(price);
+  document.getElementById('summaryTotal').textContent     = fmt(subtotal);
+  document.getElementById('qtyDisplay').textContent       = quantity;
+  document.getElementById('summaryQty').textContent       = quantity;
+  document.getElementById('summaryQtyLine').textContent   = quantity;
+  document.getElementById('qtyMinus').disabled = (quantity <= 1);
+  // Sincronizar carrito con la cantidad actual
+  const cartId = CartSystem.PRODUCT_IDS[currentProductKey] || ('velador-' + currentProductKey.toLowerCase());
+  CartSystem.setItem({ id: cartId, name: currentProduct.name, color: selectedColorName, qty: quantity, price: currentProduct.price });
+}
+
+/* ====================================================
+   QUANTITY
+   ==================================================== */
+document.getElementById('qtyMinus').addEventListener('click', () => { if (quantity > 1) { quantity--; updatePricing(); } });
+document.getElementById('qtyPlus').addEventListener('click',  () => { if (quantity < 20) { quantity++; updatePricing(); } });
+
+/* ====================================================
+   DELIVERY (solo uno, igual lo dejamos funcional)
+   ==================================================== */
+document.querySelectorAll('.delivery-option').forEach(opt => {
+  opt.addEventListener('click', () => {
+    document.querySelectorAll('.delivery-option').forEach(o => o.classList.remove('selected'));
+    opt.classList.add('selected');
+    selectedDelivery = opt.dataset.value;
+  });
+});
+
+/* ====================================================
+   FORM VALIDATION
+   ==================================================== */
+const requiredFields = [
+  { id:'fNombre',   errId:'errNombre',   label:'Nombre' },
+  { id:'fApellido', errId:'errApellido', label:'Apellido' },
+  { id:'fDni',      errId:'errDni',      label:'DNI' },
+  { id:'fTelefono', errId:'errTelefono', label:'Teléfono' },
+  { id:'fEmail',    errId:'errEmail',    label:'Email' },
+  { id:'fDireccion',errId:'errDireccion',label:'Dirección' },
+  { id:'fCiudad',   errId:'errCiudad',   label:'Ciudad' },
+  { id:'fProvincia',errId:'errProvincia',label:'Provincia' },
+  { id:'fCp',       errId:'errCp',       label:'Código postal' },
+];
+
+function validateForm() {
+  let valid = true; let firstError = null;
+  requiredFields.forEach(f => {
+    const el = document.getElementById(f.id);
+    const err = document.getElementById(f.errId);
+    if (!el.value.trim()) {
+      el.classList.add('error'); err.classList.add('show'); valid = false;
+      if (!firstError) firstError = el;
+    } else { el.classList.remove('error'); err.classList.remove('show'); }
+  });
+  const emailEl = document.getElementById('fEmail');
+  if (emailEl.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value.trim())) {
+    emailEl.classList.add('error'); document.getElementById('errEmail').classList.add('show'); valid = false;
+    if (!firstError) firstError = emailEl;
+  }
+  if (!valid && firstError) {
+    document.getElementById('validationBanner').classList.add('show');
+    firstError.scrollIntoView({ behavior:'smooth', block:'center' }); firstError.focus();
+  } else { document.getElementById('validationBanner').classList.remove('show'); }
+  return valid;
+}
+
+requiredFields.forEach(f => {
+  const el = document.getElementById(f.id);
+  el.addEventListener('input', () => {
+    if (el.value.trim()) { el.classList.remove('error'); document.getElementById(f.errId).classList.remove('show'); }
+  });
+});
+
+/* ====================================================
+   WHATSAPP CTA
+   ==================================================== */
+document.getElementById('btnFinalizar').addEventListener('click', () => {
+  if (!validateForm()) return;
+  const btn = document.getElementById('btnFinalizar');
+  btn.classList.add('loading');
+
+  const nombre    = document.getElementById('fNombre').value.trim();
+  const apellido  = document.getElementById('fApellido').value.trim();
+  const dni       = document.getElementById('fDni').value.trim();
+  const telefono  = document.getElementById('fTelefono').value.trim();
+  const email     = document.getElementById('fEmail').value.trim();
+  const direccion = document.getElementById('fDireccion').value.trim();
+  const ciudad    = document.getElementById('fCiudad').value.trim();
+  const provincia = document.getElementById('fProvincia').value.trim();
+  const cp        = document.getElementById('fCp').value.trim();
+  const refs      = document.getElementById('fRefs').value.trim();
+  const notas     = document.getElementById('fNotas').value.trim();
+  const price     = currentProduct.price;
+  const subtotal  = price * quantity;
+
+  const lines = [
+    `✨ *NUEVO PEDIDO — Veladores3D* ✨`,
+    `━━━━━━━━━━━━━━━━━━━━━━`,
+    ``,
+    `🛒 *PRODUCTO*`,
+    `• Modelo: ${currentProduct.name}`,
+    `• Color: ${selectedColorName}`,
+    `• Cantidad: ${quantity} unidad${quantity > 1 ? 'es' : ''}`,
+    `• Precio unitario: $${fmt(price)}`,
+    `• *Subtotal: $${fmt(subtotal)}*`,
+    ``,
+    `━━━━━━━━━━━━━━━━━━━━━━`,
+    ``,
+    `👤 *DATOS DEL CLIENTE*`,
+    `• Nombre: ${nombre} ${apellido}`,
+    `• DNI: ${dni}`,
+    `• Teléfono: ${telefono}`,
+    `• Email: ${email}`,
+    ``,
+    `━━━━━━━━━━━━━━━━━━━━━━`,
+    ``,
+    `📦 *ENVÍO*`,
+    `• Dirección: ${direccion}`,
+    `• Ciudad: ${ciudad}`,
+    `• Provincia: ${provincia}`,
+    `• Código postal: ${cp}`,
+    refs ? `• Referencias: ${refs}` : null,
+    `• Método: ${selectedDelivery}`,
+    ``,
+    `━━━━━━━━━━━━━━━━━━━━━━`,
+    ``,
+    `💰 *RESUMEN*`,
+    `• Subtotal: $${fmt(subtotal)}`,
+    `• Envío: A confirmar`,
+    `• *TOTAL: $${fmt(subtotal)} + envío*`,
+    ``,
+    `━━━━━━━━━━━━━━━━━━━━━━`,
+    ``,
+    notas ? `📝 *Notas:* ${notas}\n` : null,
+    `💳 Pago por transferencia Mercado Pago.`,
+    `_Por favor confirmar disponibilidad, costo de envío y alias._`,
+    ``,
+    `¡Muchas gracias! 🙏`,
+  ].filter(l => l !== null).join('\n');
+
+  const waNumber = '5491100000000';
+  const url = `https://wa.me/${waNumber}?text=${encodeURIComponent(lines)}`;
+
+  setTimeout(() => {
+    btn.classList.remove('loading');
+    CartSystem.clear(); // Vaciar carrito al finalizar pedido
+    window.open(url, '_blank', 'noopener');
+  }, 800);
+});
+
+/* ====================================================
+   NAVBAR BURGER
+   ==================================================== */
+document.getElementById('burgerBtn').addEventListener('click', () => {
+  document.getElementById('mobileMenu').classList.toggle('open');
+});
+document.querySelectorAll('.mobile-menu a').forEach(a => {
+  a.addEventListener('click', () => document.getElementById('mobileMenu').classList.remove('open'));
+});
+
+/* ====================================================
+   THEME TOGGLE
+   ==================================================== */
+(function(){
+  const btn = document.getElementById('themeToggle');
+  const root = document.documentElement;
+  const saved = localStorage.getItem('theme') || 'light';
+  root.setAttribute('data-theme', saved);
+  btn.textContent = saved === 'dark' ? '☀️' : '🌙';
+  btn.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    btn.textContent = next === 'dark' ? '☀️' : '🌙';
+    localStorage.setItem('theme', next);
+  });
+})();
+
+/* ====================================================
+   INIT
+   ==================================================== */
+loadProductUI();
+</script>
+</body>
+</html>
